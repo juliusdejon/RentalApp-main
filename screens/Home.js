@@ -5,15 +5,14 @@ import {
   Text,
   TouchableOpacity,
   Modal,
-  Button,
   Image,
   Alert,
 } from "react-native";
+import { query, collection, onSnapshot } from "firebase/firestore";
 import MapView, { Marker } from "react-native-maps";
-import * as Location from "expo-location";
 import { useNavigation } from "@react-navigation/native";
-import { getRentalListingsByEmail } from "../firebase-config";
-import { createBooking } from "../firebase-config";
+import { createBooking, db } from "../firebase-config";
+import * as Location from "expo-location";
 
 const SearchScreen = ({ user }) => {
   console.log("user", user);
@@ -22,6 +21,7 @@ const SearchScreen = ({ user }) => {
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
   const [rentalListings, setRentalListings] = useState([]);
+  const [userCity, setCity] = useState(null);
   const [selectedListing, setSelectedListing] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
 
@@ -34,23 +34,47 @@ const SearchScreen = ({ user }) => {
       }
 
       let location = await Location.getCurrentPositionAsync({});
+      const currCity = await getLocationCity(
+        location.coords.latitude,
+        location.coords.longitude
+      );
+      setCity(currCity);
+
       setLocation(location.coords);
     })();
   }, []);
 
   useEffect(() => {
     if (location) {
-      const fetchRentalListings = async () => {
-        const city = await getLocationCity(
-          location.latitude,
-          location.longitude
+      const q = query(collection(db, "rentals"));
+
+      const unsubscribe = onSnapshot(q, async (snapshot) => {
+        const results = [];
+
+        await Promise.all(
+          snapshot.docs.map(async (doc) => {
+            const rentalData = doc.data();
+            // Get city name from rental listing's latitude and longitude
+            const city = await Location.reverseGeocodeAsync({
+              latitude: rentalData.latitude,
+              longitude: rentalData.longitude,
+            });
+            const rentalCity = city[0].city;
+
+            // Compare cities and push rental listings if they match
+            if (userCity === rentalCity) {
+              results.push(rentalData);
+            }
+          })
         );
-        const listings = await getRentalListingsByEmail(city);
-        setRentalListings(listings);
-      };
-      fetchRentalListings();
+
+        setRentalListings(results);
+      });
+
+      // Cleanup function to unsubscribe from snapshot listener
+      return () => unsubscribe();
     }
-  }, [location]);
+  }, [location, userCity]);
 
   const getLocationCity = async (latitude, longitude) => {
     try {
@@ -123,6 +147,19 @@ const SearchScreen = ({ user }) => {
     setModalVisible(false);
   };
 
+  const handleRegionChangeComplete = async (region) => {
+    console.log(region);
+
+    const currCity = await getLocationCity(region.latitude, region.longitude);
+    setCity(currCity);
+
+    setLocation({ latitude: region.latitude, longitude: region.longitude });
+
+    // setCurrentRegion(region);
+    // Do something with the updated region, such as reverse geocoding
+    // You can fetch city information based on the new region here
+  };
+
   return (
     <View style={styles.container}>
       {errorMsg ? (
@@ -136,6 +173,7 @@ const SearchScreen = ({ user }) => {
             latitudeDelta: 0.0922,
             longitudeDelta: 0.0421,
           }}
+          onRegionChangeComplete={handleRegionChangeComplete}
         >
           {rentalListings.map((listing, index) => (
             <Marker
