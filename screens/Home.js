@@ -169,10 +169,21 @@ const SearchScreen = ({ user }) => {
         onRequestClose={() => setModalVisible(false)}
       >
         <View style={styles.modalContainer}>
+          {/* <ImageBackground
+            source={require('../assets/bolt.png')} // Adjust the path to your image
+            style={styles.imageBackground}
+          > */}
           <View style={styles.modalContent}>
+            {/* <ImageBackground
+    source={require("../assets/bolt.png")}
+    style={styles.imageBackground}
+  > */}
             <View style={styles.modalHeader}>
               <Text style={styles.summaryTitle}>Listing Summary:</Text>
-              <TouchableOpacity onPress={handleCloseModal}>
+              <TouchableOpacity
+                style={styles.closeButtonContainer}
+                onPress={handleCloseModal}
+              >
                 <Text style={styles.closeButton}>X</Text>
               </TouchableOpacity>
             </View>
@@ -192,11 +203,26 @@ const SearchScreen = ({ user }) => {
                   Address: {selectedListing.address}
                 </Text>
                 <Text style={styles.text}>MSRP: ${selectedListing.msrp}</Text>
-                <Text style={styles.text}>Price:${selectedListing.price}</Text>
+                <Text
+                  style={[
+                    styles.text,
+                    { fontSize: 18, color: "darkgreen", fontWeight: "bold" },
+                  ]}
+                >
+                  Price: ${selectedListing.price}
+                </Text>
               </>
             )}
-            <Button title="BOOK NOW" onPress={handleBookNow} />
+            <TouchableOpacity
+              style={styles.bookNowButton}
+              onPress={handleBookNow}
+              activeOpacity={0.8}
+            >
+              <Text style={styles.bookNowText}>BOOK NOW</Text>
+            </TouchableOpacity>
+            {/* </ImageBackground> */}
           </View>
+          {/* </ImageBackground> */}
         </View>
       </Modal>
     </View>
@@ -225,24 +251,46 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    // backgroundColor: "rgb(127, 255, 212)",
+  },
+  imageBackground: {
+    width: "100%",
+    height: "100%",
+    justifyContent: "center",
+    alignItems: "center",
   },
   modalContent: {
-    backgroundColor: "#fff",
+    backgroundColor: "#7FFFD4",
     padding: 20,
     borderRadius: 10,
     elevation: 5,
+    width: "80%",
+    height: "60%",
+    justifyContent: "center",
+    alignItems: "center",
+    borderWidth: 5,
+    borderColor: "black",
   },
+
   modalHeader: {
     flexDirection: "row",
     justifyContent: "space-between",
     marginBottom: 10,
   },
+
   closeButton: {
-    fontSize: 18,
+    fontSize: 23,
     fontWeight: "bold",
     color: "red",
   },
+  closeButtonContainer: {
+    position: "absolute",
+    marginLeft: 205,
+    marginTop: -45,
+    // top: -50,
+    // right: -60,
+  },
+
   photo: {
     width: 200,
     height: 150,
@@ -251,9 +299,30 @@ const styles = StyleSheet.create({
   },
   text: {
     marginBottom: 5,
+    fontFamily: "Futura",
+    fontSize: 17,
   },
   summaryTitle: {
+    fontFamily: "Futura",
     fontSize: 18,
+    fontWeight: "bold",
+  },
+  bookNowButton: {
+    backgroundColor: "navy",
+    borderRadius: 25,
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    elevation: 3,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    marginTop: 20,
+  },
+  bookNowText: {
+    color: "white",
+    textAlign: "center",
+    fontSize: 16,
     fontWeight: "bold",
   },
 });

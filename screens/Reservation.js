@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { ScrollView, View, StyleSheet, Text, Image } from "react-native";
 import { db } from "../firebase-config";
+import { format } from "date-fns";
 import { collection, query, onSnapshot, where } from "firebase/firestore";
 
 const MyReservationsScreen = ({ user }) => {
@@ -8,12 +9,24 @@ const MyReservationsScreen = ({ user }) => {
 
   useEffect(() => {
     const q = query(collection(db, "book"), where("userEmail", "==", user));
+
+    const sortBookings = (bookings) => {
+      return bookings.sort((a, b) => {
+        if (a.status === "Confirmed" && b.status !== "Confirmed") {
+          return -1;
+        } else if (a.status !== "Confirmed" && b.status === "Confirmed") {
+          return 1;
+          return 0;
+        }
+      });
+    };
+
     const unsubscribe = onSnapshot(q, (snapshot) => {
       const updated = snapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
       }));
-      setRentalBookings(updated);
+      setRentalBookings(sortBookings(updated));
     });
 
     // Cleanup function to unsubscribe from snapshot listener
@@ -33,12 +46,7 @@ const MyReservationsScreen = ({ user }) => {
               Vehicle Name: {booking.vehicleDetails?.name}
             </Text>
             <Text style={styles.text}>
-              Booking Date:{" "}
-              {booking.bookingDate
-                ? new Date(
-                    booking.bookingDate.seconds * 1000
-                  ).toLocaleDateString()
-                : "Unknown"}
+              Booking Date: {format(new Date(booking.bookingDate), "PP pp")}
             </Text>
             <Text style={styles.text}>
               License Plate: {booking.licensePlate || "Unknown"}
@@ -48,7 +56,9 @@ const MyReservationsScreen = ({ user }) => {
               {`${booking.pickupLocation?.latitude}, ${booking.pickupLocation?.longitude}` ||
                 "Unknown"}
             </Text>
-            <Text style={styles.text}>Price: {booking.price || "Unknown"}</Text>
+            <Text style={styles.text}>
+              Price: ${booking.price || "Unknown"}
+            </Text>
             <Text style={styles.text}>
               Booking Status: {booking.status || "Unknown"}
             </Text>
@@ -73,12 +83,23 @@ const styles = StyleSheet.create({
   bookingContainer: {
     flexDirection: "row",
     padding: 10,
+    backgroundColor: "#676767",
     marginBottom: 10,
-    borderWidth: 1,
-    borderColor: "#ccc",
+    color: "#dddddd",
+    borderWidth: 3,
+    borderColor: "#000000",
     borderRadius: 8,
     width: "90%",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
+
   vehicleImage: {
     width: 100,
     height: 100,
@@ -91,6 +112,7 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 16,
     marginBottom: 5,
+    color: "#dddddd",
   },
 });
 
