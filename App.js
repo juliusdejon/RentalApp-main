@@ -1,13 +1,20 @@
 import { SafeAreaView, StyleSheet } from "react-native";
 import { useState } from "react";
-import HomeScreen from "./screens/Home.js";
-import SignIn from "./screens/SignIn.js";
-import ProfileScreen from "./screens/Profile";
+import HomeScreen from "./screens/Home";
+import SignIn from "./screens/SignIn";
 import ManageReservation from "./screens/Reservation.js";
+import ProfileScreen from "./screens/Profile";
 import { AntDesign } from "@expo/vector-icons";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { auth, signInWithEmailAndPassword, signOut } from "./firebase-config";
+import {
+  auth,
+  db,
+  signInWithEmailAndPassword,
+  signOut,
+} from "./firebase-config";
+
+import { getDocs, query, where, collection } from "firebase/firestore";
 
 const Tab = createBottomTabNavigator();
 
@@ -25,16 +32,35 @@ export default function App() {
         emailFromUI,
         passwordFromUI
       );
-      //who is the current user
+      if (userCredential._tokenResponse.registered) {
+        const q = query(
+          collection(db, "users"),
+          where("email", "==", emailFromUI),
+          where("type", "==", "renter")
+        );
+        try {
+          const querySnapshot = await getDocs(q);
+          const userData = querySnapshot.docs.map((doc) => doc.data());
+          if (userData.length > 0) {
+            alert(`Login Success! ${userCredential.user.email}`);
+            setUserLoggedIn(true);
+            setUser(userCredential.user.email);
+          } else {
+            throw new Error("Invalid Role");
+          }
+        } catch (error) {
+          alert(error.message);
+          console.log(error);
+        }
+      }
       // console.log(userCredential.user.email);
-      // alert(`Login Success! ${userCredential.user.email}`);
-      setUserLoggedIn(true);
-      setUser(userCredential.user.email);
+      //who is the current user
     } catch (err) {
       alert("Invalid Credentials");
       console.log(err);
     }
   };
+
   const onLogout = async () => {
     try {
       //1. check if user is currently logged in
@@ -42,7 +68,7 @@ export default function App() {
         alert(`Sorry, no user is logged in.`);
       } else {
         await signOut(auth);
-        alert(`Logout Complete!`);
+        alert(`Logged Out!`);
         setUserLoggedIn(false);
       }
     } catch (err) {
@@ -76,7 +102,7 @@ export default function App() {
               }}
             >
               {() => <ManageReservation user={user} />}
-              </Tab.Screen>
+            </Tab.Screen>
 
             <Tab.Screen
               name="Profile"
