@@ -11,6 +11,7 @@ import {
 import { query, collection, onSnapshot } from "firebase/firestore";
 import MapView, { Marker } from "react-native-maps";
 import { useNavigation } from "@react-navigation/native";
+import { AntDesign } from "@expo/vector-icons";
 import { createBooking, db } from "../firebase-config";
 import * as Location from "expo-location";
 
@@ -222,7 +223,8 @@ const SearchScreen = ({ user }) => {
                 style={styles.closeButtonContainer}
                 onPress={handleCloseModal}
               >
-                <Text style={styles.closeButton}>X</Text>
+                {/* <Text style={styles.closeButton}>X</Text> */}
+                <AntDesign name="closecircleo" size={24} color="black" />
               </TouchableOpacity>
             </View>
             {selectedListing && (
@@ -240,7 +242,9 @@ const SearchScreen = ({ user }) => {
                 <Text style={styles.text}>
                   Address: {selectedListing.address}
                 </Text>
-                <Text style={styles.text}>MSRP: ${selectedListing.msrp}</Text>
+                <Text style={styles.text}>
+                  MSRP: ${Number(selectedListing.msrp).toLocaleString()}
+                </Text>
                 <Text
                   style={[
                     styles.text,
@@ -298,7 +302,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   modalContent: {
-    backgroundColor: "#7FFFD4",
+    backgroundColor: "white",
     padding: 20,
     borderRadius: 10,
     elevation: 5,
@@ -323,7 +327,7 @@ const styles = StyleSheet.create({
   },
   closeButtonContainer: {
     position: "absolute",
-    marginLeft: 205,
+    marginLeft: 200,
     marginTop: -45,
     // top: -50,
     // right: -60,
@@ -346,7 +350,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   bookNowButton: {
-    backgroundColor: "navy",
+    backgroundColor: "#f1c40f",
     borderRadius: 25,
     paddingVertical: 12,
     paddingHorizontal: 20,

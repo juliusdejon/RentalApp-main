@@ -36,11 +36,37 @@ const MyReservationsScreen = ({ user }) => {
   return (
     <ScrollView contentContainerStyle={styles.scrollViewContent}>
       {rentalBookings.map((booking, index) => (
-        <View key={index} style={styles.bookingContainer}>
+        <View
+          key={index}
+          style={{
+            ...styles.bookingContainer,
+          }}
+        >
           <Image
             source={{ uri: booking.vehicleDetails?.image }}
             style={styles.vehicleImage}
           />
+          <View
+            style={{
+              position: "absolute",
+              color: "black",
+              backgroundColor: "#f1c40f",
+              top: 122,
+              left: 85,
+              transform: [{ rotate: "5deg" }],
+            }}
+          >
+            <Text
+              style={{
+                fontWeight: "700",
+                fontSize: 8,
+                paddingHorizontal: 5,
+                color: "black",
+              }}
+            >
+              {booking.licensePlate}
+            </Text>
+          </View>
           <View style={styles.detailsContainer}>
             <Text style={styles.text}>
               Vehicle Name: {booking.vehicleDetails?.name}
@@ -81,11 +107,12 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   bookingContainer: {
-    flexDirection: "row",
+    // flexDirection: "row",
+    alignItems: "center",
     padding: 10,
-    backgroundColor: "#676767",
+    backgroundColor: "white",
     marginBottom: 10,
-    color: "#dddddd",
+    color: "#2c3e50",
     borderWidth: 3,
     borderColor: "#000000",
     borderRadius: 8,
@@ -95,24 +122,25 @@ const styles = StyleSheet.create({
       width: 0,
       height: 2,
     },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
+    shadowOpacity: 2,
+    shadowRadius: 6,
     elevation: 5,
   },
 
   vehicleImage: {
-    width: 100,
-    height: 100,
+    width: 200,
+    height: 200,
     marginRight: 10,
     resizeMode: "contain",
   },
   detailsContainer: {
     flex: 1,
+    gap: 10,
   },
   text: {
-    fontSize: 16,
-    marginBottom: 5,
-    color: "#dddddd",
+    fontFamily: "Futura",
+    fontSize: 17,
+    color: "#2c3e50",
   },
 });
 
