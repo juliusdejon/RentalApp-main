@@ -67,8 +67,8 @@ const SearchScreen = ({ user }) => {
             }
           })
         );
-
-        setRentalListings(results);
+        // append previously saved results
+        setRentalListings([...rentalListings, ...results]);
       });
 
       // Cleanup function to unsubscribe from snapshot listener
