@@ -29,7 +29,7 @@ function ProfileScreen(props) {
       >
         <Image
           style={styles.imageStyle}
-          source={require("../assets/icon.png")}
+          source={require("../assets/rental-memoji.jpeg")}
         />
         <Text style={styles.welcomeText}>Renter</Text>
         <Text>{user}</Text>
