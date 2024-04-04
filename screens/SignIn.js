@@ -14,18 +14,48 @@ const SignIn = (props) => {
 
   return (
     <View style={styles.outerContainer}>
-      <View style={{ backgroundColor: "teal", borderRadius: 5, padding: 10 }}>
+      {/* <View style={{ backgroundColor: "teal", borderRadius: 5, padding: 10 }}>
+  
+      </View> */}
+      <Image
+        style={{
+          height: 200,
+          width: 400,
+          objectFit: "contain",
+        }}
+        source={require("../assets/companyLogo.png")}
+      />
+      <View style={{ flexDirection: "row", marginTop: -75 }}>
         <Image
           style={{
-            height: 200,
-            width: 400,
+            height: 150,
+            width: 150,
+            objectFit: "contain",
+            marginRight: -50,
+            borderRadius: 30,
+          }}
+          source={require("../assets/gagan.png")}
+        />
+        <Image
+          style={{
+            height: 150,
+            width: 150,
+            objectFit: "contain",
+            marginRight: -50,
+            borderRadius: 30,
+          }}
+          source={require("../assets/leo.png")}
+        />
+        <Image
+          style={{
+            height: 150,
+            width: 150,
             objectFit: "contain",
             borderRadius: 30,
           }}
-          source={require("../assets/companyLogo.png")}
+          source={require("../assets/jd.png")}
         />
       </View>
-
       <View style={styles.innerContainer}>
         <Text style={{ fontSize: 30, fontWeight: "bold" }}>Sign In</Text>
         <TextInput
@@ -65,18 +95,18 @@ const styles = StyleSheet.create({
   innerContainer: {
     width: "90%",
     height: "50%",
-    backgroundColor: "#f1c40f",
+    backgroundColor: "white",
     borderRadius: 10,
     padding: 20,
     justifyContent: "space-evenly",
-    borderColor: "black",
-    borderWidth: 2,
+    borderColor: "#151515",
+    borderWidth: 10,
   },
 
   textInputStyles: {
-    backgroundColor: "lightgray",
+    backgroundColor: "#dedede",
     borderWidth: 1,
-    borderColor: "gray",
+    borderColor: "#D3d3d3",
     borderRadius: 8,
     paddingHorizontal: 10,
     paddingVertical: 8,
@@ -85,7 +115,7 @@ const styles = StyleSheet.create({
 
   button: {
     padding: 10,
-    backgroundColor: "red",
+    backgroundColor: "#f1c40f",
     borderRadius: 10,
     alignItems: "center",
   },
