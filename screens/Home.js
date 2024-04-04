@@ -131,6 +131,7 @@ const SearchScreen = ({ user }) => {
         latitude: location.latitude,
         longitude: location.longitude,
       },
+      address: selectedListing.address,
       price: selectedListing.price,
       ownerEmail: selectedListing.ownerEmail, // Include only ownerEmail
       status: "Pending",

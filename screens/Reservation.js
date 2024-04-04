@@ -78,9 +78,7 @@ const MyReservationsScreen = ({ user }) => {
               License Plate: {booking.licensePlate || "Unknown"}
             </Text>
             <Text style={styles.text}>
-              Pickup Location:{" "}
-              {`${booking.pickupLocation?.latitude}, ${booking.pickupLocation?.longitude}` ||
-                "Unknown"}
+              Pickup Location: {`${booking.address}` || "Unknown"}
             </Text>
             <Text style={styles.text}>
               Price: ${booking.price || "Unknown"}
